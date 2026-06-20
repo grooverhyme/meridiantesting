@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meridian – Brand Strategy & Creative</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: #e8e8e8;
-      background: #080c0f;
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #f4f3ef;
+      color: #0d0d0d;
       overflow-x: hidden;
       cursor: none;
     }
 
-    /* ── Canvas background ── */
+    /* ── Git canvas background ── */
     #bg-canvas {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
@@ -24,51 +24,40 @@
     }
 
     /* ── Custom cursor ── */
-    .cursor {
-      position: fixed; width: 6px; height: 6px;
-      background: #ffffff; border-radius: 50%;
+    .cursor-dot {
+      position: fixed; width: 7px; height: 7px;
+      background: #0d0d0d; border-radius: 50%;
       pointer-events: none; z-index: 9999;
       transform: translate(-50%, -50%);
     }
     .cursor-ring {
-      position: fixed; width: 32px; height: 32px;
-      border: 1px solid rgba(255,255,255,0.35);
+      position: fixed; width: 38px; height: 38px;
+      border: 1.5px solid rgba(13,13,13,0.28);
       border-radius: 50%; pointer-events: none; z-index: 9998;
       transform: translate(-50%, -50%);
-      transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+      transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease;
     }
-    .cursor-ring.expanded { width: 52px; height: 52px; border-color: rgba(255,255,255,0.6); }
+    .cursor-ring.expanded { width: 58px; height: 58px; border-color: rgba(13,13,13,0.55); }
     .ripple {
       position: fixed; width: 0; height: 0; border-radius: 50%;
-      background: rgba(255,255,255,0.12); pointer-events: none; z-index: 9997;
+      background: rgba(13,13,13,0.07); pointer-events: none; z-index: 9997;
       transform: translate(-50%, -50%);
       animation: rippleOut 0.75s ease-out forwards;
     }
-    @keyframes rippleOut {
-      to { width: 160px; height: 160px; opacity: 0; }
-    }
+    @keyframes rippleOut { to { width: 200px; height: 200px; opacity: 0; } }
 
-    /* ── Animations ── */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── Line reveal ── */
+    .line-wrap { overflow: hidden; display: block; }
+    .line-inner {
+      display: block;
+      transform: translateY(108%);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
+    .line-inner.visible { transform: translateY(0); }
 
-    /* ── Word micro-animation ── */
-    .word {
-      display: inline-block;
-      opacity: 0; transform: translateY(22px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-    .word.visible { opacity: 1; transform: translateY(0); }
-
-    /* ── Scroll reveal ── */
+    /* ── Fade reveal ── */
     .reveal {
-      opacity: 0; transform: translateY(28px);
+      opacity: 0; transform: translateY(26px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -76,275 +65,281 @@
     /* ── Navigation ── */
     .nav-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(8,12,15,0.82);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      padding: 20px 32px;
+      background: rgba(244,243,239,0.88);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      padding: 18px 44px;
       display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
+      border-bottom: 1px solid rgba(13,13,13,0.09);
     }
-    .logo {
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo img { height: 36px; width: auto; object-fit: contain; }
+    .logo img { height: 40px; width: auto; object-fit: contain; display: block; }
     .menu-toggle {
       background: none; border: none; cursor: none;
-      font-size: 20px; color: #e8e8e8; line-height: 1; padding: 4px;
+      font-size: 22px; color: #0d0d0d; line-height: 1; padding: 4px;
       transition: opacity 0.2s;
     }
-    .menu-toggle:hover { opacity: 0.5; }
+    .menu-toggle:hover { opacity: 0.4; }
 
-    /* Full-screen overlay menu */
     .nav-menu {
-      position: fixed; top: 0; left: -100%; width: 100%; height: 100vh;
-      background: #080c0f; z-index: 999;
-      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
-      transition: left 0.4s cubic-bezier(0.4,0,0.2,1);
-      padding: 60px 32px;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+      background: #0d0d0d; z-index: 999;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 60px 44px;
+      clip-path: inset(0 0 100% 0);
+      transition: clip-path 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .nav-menu.active { left: 0; }
+    .nav-menu.active { clip-path: inset(0 0 0% 0); }
     .nav-menu a {
-      text-decoration: none; color: #e8e8e8;
-      font-size: 26px; font-weight: 300;
-      position: relative; transition: color 0.2s;
-    }
-    .nav-menu a::after {
-      content: ''; position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 1px; background: #fff;
-      transition: width 0.3s ease;
-    }
-    .nav-menu a:hover { color: #fff; }
-    .nav-menu a:hover::after { width: 100%; }
-    .nav-close {
-      position: absolute; top: 20px; right: 32px;
-      background: none; border: none; font-size: 26px;
-      cursor: none; color: #e8e8e8; line-height: 1;
+      text-decoration: none; color: #f4f3ef;
+      font-size: clamp(38px, 6.5vw, 76px); font-weight: 700;
+      line-height: 1.15; display: inline-block;
       transition: opacity 0.2s;
     }
-    .nav-close:hover { opacity: 0.5; }
+    .nav-menu a:hover { opacity: 0.35; }
+    .nav-close {
+      position: absolute; top: 18px; right: 44px;
+      background: none; border: none; font-size: 26px;
+      cursor: none; color: #f4f3ef; line-height: 1; transition: opacity 0.2s;
+    }
+    .nav-close:hover { opacity: 0.45; }
 
     /* ── Hero ── */
     .hero {
-      margin-top: 70px;
-      min-height: calc(100vh - 70px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 60px 32px;
+      margin-top: 76px;
+      min-height: calc(100vh - 76px);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 44px 64px;
       position: relative; z-index: 1;
     }
-    .hero-content {
-      text-align: center; max-width: 800px;
-      animation: fadeIn 1s ease both;
+    .hero-eyebrow {
+      font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: #999;
+      margin-bottom: 28px;
     }
     .hero h1 {
-      font-size: 64px; font-weight: 300; line-height: 1.15;
-      margin-bottom: 24px; color: #ffffff;
+      font-size: clamp(54px, 9.5vw, 114px);
+      font-weight: 900; line-height: 0.97;
+      letter-spacing: -0.04em; color: #0d0d0d;
+      margin-bottom: 52px;
+    }
+    .hero-bottom {
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 40px;
     }
     .hero-subtitle {
-      font-size: 18px; color: rgba(232,232,232,0.6); line-height: 1.7;
-      margin-bottom: 48px; font-weight: 300;
+      font-size: 16px; color: #777; line-height: 1.75; font-weight: 300;
+      max-width: 360px;
     }
+    .hero-logo { height: 72px; width: auto; object-fit: contain; flex-shrink: 0; }
     .cta-button {
-      display: inline-block; padding: 14px 36px;
-      background: #ffffff; color: #080c0f;
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 13px 26px;
+      background: #0d0d0d; color: #f4f3ef;
       text-decoration: none; font-weight: 500;
-      border-radius: 2px; border: none; cursor: none;
-      font-size: 14px; letter-spacing: 0.5px; font-family: inherit;
-      position: relative; overflow: hidden;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      border-radius: 100px; border: none; cursor: none;
+      font-size: 14px; letter-spacing: 0.2px; font-family: inherit;
+      flex-shrink: 0;
+      transition: opacity 0.2s ease, transform 0.25s ease;
     }
-    .cta-button::after {
-      content: ''; position: absolute;
-      top: 0; left: -100%; width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
-      transition: left 0.5s ease;
-    }
-    .cta-button:hover::after { left: 150%; }
-    .cta-button:hover { opacity: 0.9; transform: translateY(-2px); }
-    .cta-button:active { transform: translateY(0); }
+    .cta-button:hover { opacity: 0.75; transform: translateY(-2px); }
+    .cta-arrow { display: inline-block; transition: transform 0.3s ease; }
+    .cta-button:hover .cta-arrow { transform: translate(3px, -3px); }
 
-    /* ── Generic section ── */
-    .section {
-      padding: 100px 32px; max-width: 1100px; margin: 0 auto;
+    /* ── Marquee ── */
+    .marquee-strip {
+      background: #0d0d0d; color: #f4f3ef;
+      padding: 16px 0; overflow: hidden;
       position: relative; z-index: 1;
     }
+    .marquee-track {
+      display: inline-flex;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-item {
+      font-size: 11px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; padding: 0 28px;
+      display: flex; align-items: center; gap: 28px; white-space: nowrap;
+    }
+    .marquee-dot {
+      width: 3px; height: 3px; background: rgba(244,243,239,0.45);
+      border-radius: 50%; flex-shrink: 0;
+    }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── Generic section ── */
+    .section { padding: 120px 44px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .section-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 2.5px; color: #999; margin-bottom: 52px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .section-label::after { content: ''; display: inline-block; width: 36px; height: 1px; background: #bbb; }
+
     .section-title {
-      font-size: 42px; font-weight: 300; margin-bottom: 60px; color: #ffffff;
-      position: relative; display: inline-block;
+      font-size: clamp(38px, 5.5vw, 64px); font-weight: 700;
+      line-height: 1.08; letter-spacing: -0.025em; color: #0d0d0d;
+      margin-bottom: 64px;
     }
-    .section-title::after {
-      content: ''; position: absolute; bottom: -12px; left: 0;
-      width: 0; height: 1px; background: rgba(255,255,255,0.25);
-      transition: width 0.9s ease 0.2s;
-    }
-    .section-title.visible::after { width: 100%; }
 
     /* ── About ── */
-    .about-content {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
-    }
-    .about-text p {
-      font-size: 16px; line-height: 1.85; margin-bottom: 24px;
-      color: rgba(232,232,232,0.6); font-weight: 300;
-    }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .about-text p { font-size: 17px; line-height: 1.85; margin-bottom: 24px; color: #666; font-weight: 300; }
     .about-text p:last-child { margin-bottom: 0; }
-    .about-highlight { color: #ffffff; font-weight: 500; }
+    .about-highlight { color: #0d0d0d; font-weight: 600; }
     .about-image {
-      width: 100%; height: 450px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
+      width: 100%; aspect-ratio: 4/5; background: #e8e7e3; border-radius: 3px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: rgba(255,255,255,0.2); letter-spacing: 0.5px;
-      overflow: hidden;
+      font-size: 12px; color: #bbb; letter-spacing: 0.5px; overflow: hidden;
     }
     .about-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ── Services ── */
-    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,255,255,0.06); }
-    .service-item {
-      padding: 36px 32px;
-      background: #080c0f;
-      transition: background 0.3s ease, transform 0.3s ease;
+    /* ── Services list (lamalama-style) ── */
+    .services-list { border-top: 1px solid #e0dfd9; }
+    .service-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 26px 0; border-bottom: 1px solid #e0dfd9; gap: 24px;
+      transition: padding-left 0.35s cubic-bezier(0.16,1,0.3,1);
+      cursor: none;
     }
-    .service-item:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
-    .service-item h3 { font-size: 18px; font-weight: 500; margin-bottom: 12px; color: #ffffff; }
-    .service-item p { font-size: 14px; line-height: 1.7; color: rgba(232,232,232,0.5); font-weight: 300; }
-    .service-number {
-      font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 2px;
-      font-weight: 500; margin-bottom: 20px; font-variant-numeric: tabular-nums;
+    .service-row:hover { padding-left: 18px; }
+    .service-left { display: flex; align-items: baseline; gap: 20px; }
+    .service-num { font-size: 11px; color: #bbb; font-weight: 500; letter-spacing: 1px; min-width: 20px; }
+    .service-name { font-size: clamp(18px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.01em; }
+    .service-tag {
+      font-size: 12px; color: #999; font-weight: 400;
+      background: #eae9e5; padding: 4px 10px; border-radius: 100px;
     }
+    .service-arrow { font-size: 18px; color: #bbb; transition: transform 0.3s ease, color 0.3s; flex-shrink: 0; }
+    .service-row:hover .service-arrow { transform: translate(4px, -4px); color: #0d0d0d; }
 
     /* ── Sectors ── */
-    .sectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .sectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: #dddcd8; }
     .sector-item {
-      padding: 28px 0;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      transition: border-color 0.3s ease;
+      background: #f4f3ef; padding: 44px 36px; cursor: none;
+      transition: background 0.35s ease, color 0.35s ease;
     }
-    .sector-item:hover { border-color: rgba(255,255,255,0.3); }
-    .sector-item h4 { font-size: 16px; font-weight: 500; margin-bottom: 12px; color: #ffffff; }
-    .sector-item p { font-size: 13px; color: rgba(232,232,232,0.5); line-height: 1.7; font-weight: 300; }
+    .sector-item:hover { background: #0d0d0d; }
+    .sector-num { font-size: 11px; color: #bbb; letter-spacing: 2px; margin-bottom: 24px; font-weight: 500; transition: color 0.35s; }
+    .sector-item:hover .sector-num { color: rgba(244,243,239,0.35); }
+    .sector-item h4 { font-size: 20px; font-weight: 700; margin-bottom: 14px; transition: color 0.35s; }
+    .sector-item:hover h4 { color: #f4f3ef; }
+    .sector-item p { font-size: 14px; color: #777; line-height: 1.7; font-weight: 300; transition: color 0.35s; }
+    .sector-item:hover p { color: rgba(244,243,239,0.55); }
 
     /* ── Projects ── */
-    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
-    .project-card {
-      border-radius: 2px; overflow: hidden;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.07);
-      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
-    }
-    .project-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 32px 64px rgba(0,0,0,0.6);
-      border-color: rgba(255,255,255,0.16);
-    }
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .project-card { border-radius: 3px; overflow: hidden; cursor: none; }
     .project-image {
-      width: 100%; height: 320px;
-      background: rgba(255,255,255,0.03);
+      width: 100%; aspect-ratio: 3/2;
+      background: #e2e1dd; position: relative; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: rgba(255,255,255,0.18); letter-spacing: 0.5px;
-      overflow: hidden;
+      font-size: 13px; color: #bbb;
     }
     .project-image img {
       width: 100%; height: 100%; object-fit: cover; display: block;
-      transition: transform 0.6s ease;
+      transition: transform 0.7s cubic-bezier(0.16,1,0.3,1);
     }
-    .project-card:hover .project-image img { transform: scale(1.05); }
-    .project-info { padding: 28px; }
-    .project-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
-    .project-info p { font-size: 13px; color: rgba(232,232,232,0.45); font-weight: 300; line-height: 1.6; }
+    .project-card:hover .project-image img { transform: scale(1.06); }
+    .project-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(13,13,13,0.85) 0%, rgba(13,13,13,0.1) 60%);
+      padding: 28px; display: flex; align-items: flex-end;
+      opacity: 0; transition: opacity 0.4s ease;
+    }
+    .project-card:hover .project-overlay { opacity: 1; }
+    .project-overlay h4 { font-size: 22px; font-weight: 700; color: #f4f3ef; margin-bottom: 4px; }
+    .project-overlay p { font-size: 13px; color: rgba(244,243,239,0.6); font-weight: 300; }
+    .project-info { padding: 18px 0 10px; }
+    .project-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .project-info p { font-size: 13px; color: #999; font-weight: 300; }
 
     /* ── Contact ── */
     .contact-section {
-      background: rgba(255,255,255,0.02);
-      border-top: 1px solid rgba(255,255,255,0.07);
-      color: #e8e8e8; padding: 100px 32px; text-align: center;
-      position: relative; z-index: 1;
+      background: #0d0d0d; color: #f4f3ef;
+      padding: 120px 44px; position: relative; z-index: 1;
     }
-    .contact-section h2 { font-size: 48px; font-weight: 300; margin-bottom: 20px; color: #ffffff; }
-    .contact-section > p { font-size: 16px; margin-bottom: 52px; font-weight: 300; color: rgba(232,232,232,0.55); }
-    .contact-form { max-width: 500px; margin: 0 auto; }
-    .form-group { margin-bottom: 28px; text-align: left; }
+    .contact-inner { max-width: 1200px; margin: 0 auto; }
+    .contact-section h2 {
+      font-size: clamp(44px, 7vw, 88px); font-weight: 900;
+      line-height: 0.97; letter-spacing: -0.04em; margin-bottom: 72px;
+    }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-info p { font-size: 17px; color: rgba(244,243,239,0.5); line-height: 1.8; font-weight: 300; margin-bottom: 44px; }
+    .contact-detail { font-size: 15px; color: rgba(244,243,239,0.65); line-height: 2.1; }
+    .form-group { margin-bottom: 32px; }
     .form-group label {
       display: block; font-size: 11px; margin-bottom: 10px;
       font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
-      color: rgba(232,232,232,0.4);
+      color: rgba(244,243,239,0.32);
     }
-    .form-group input,
-    .form-group textarea {
-      width: 100%; padding: 12px 0;
-      border: none; border-bottom: 1px solid rgba(255,255,255,0.15);
-      font-family: inherit; font-size: 15px;
-      background: transparent; color: #e8e8e8;
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 13px 0;
+      border: none; border-bottom: 1px solid rgba(255,255,255,0.13);
+      font-family: inherit; font-size: 16px;
+      background: transparent; color: #f4f3ef;
       transition: border-color 0.2s; outline: none; cursor: none;
     }
-    .form-group input::placeholder,
-    .form-group textarea::placeholder { color: rgba(232,232,232,0.22); }
-    .form-group input:focus,
-    .form-group textarea:focus { border-bottom-color: rgba(255,255,255,0.55); }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(244,243,239,0.2); }
+    .form-group input:focus, .form-group textarea:focus { border-bottom-color: rgba(255,255,255,0.48); }
     .form-group textarea { resize: vertical; min-height: 100px; }
-    .contact-section .cta-button { background: #fff; color: #080c0f; width: 100%; margin-top: 16px; }
+    .contact-section .cta-button { background: #f4f3ef; color: #0d0d0d; margin-top: 12px; }
+    .contact-section .cta-button:hover { opacity: 0.82; }
 
     /* ── Footer ── */
     footer {
-      background: rgba(0,0,0,0.5); padding: 60px 32px;
+      background: #0a0a0a; padding: 64px 44px 40px;
       border-top: 1px solid rgba(255,255,255,0.06);
       position: relative; z-index: 1;
     }
-    .footer-content { max-width: 1100px; margin: 0 auto; }
-    .footer-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 60px;
-    }
-    .footer-logo { height: 44px; width: auto; margin-bottom: 16px; object-fit: contain; }
+    .footer-content { max-width: 1200px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px; margin-bottom: 60px; }
+    .footer-logo { height: 40px; width: auto; margin-bottom: 18px; object-fit: contain; display: block; }
     .footer-column h5 {
       font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 1.5px; margin-bottom: 16px; color: rgba(255,255,255,0.85);
+      letter-spacing: 1.5px; margin-bottom: 14px; color: rgba(244,243,239,0.8);
     }
-    .footer-column p { font-size: 13px; color: rgba(232,232,232,0.4); line-height: 1.9; font-weight: 300; }
-    .footer-column a { color: rgba(232,232,232,0.5); text-decoration: none; transition: color 0.2s; }
-    .footer-column a:hover { color: #ffffff; }
+    .footer-column p { font-size: 13px; color: rgba(244,243,239,0.38); line-height: 2; font-weight: 300; }
+    .footer-column a { color: rgba(244,243,239,0.45); text-decoration: none; transition: color 0.2s; }
+    .footer-column a:hover { color: #f4f3ef; }
     .footer-bottom {
-      font-size: 12px; color: rgba(232,232,232,0.25); text-align: center;
-      padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 36px; border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 12px; color: rgba(244,243,239,0.22);
     }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
       body { cursor: auto; }
-      .cursor, .cursor-ring { display: none; }
+      .cursor-dot, .cursor-ring { display: none; }
       .nav-header { padding: 16px 20px; }
-      .nav-menu { gap: 32px; }
-      .nav-menu a { font-size: 22px; }
-      .hero { margin-top: 60px; min-height: calc(100vh - 60px); padding: 40px 20px; }
-      .hero h1 { font-size: 38px; }
-      .hero-subtitle { font-size: 16px; }
-      .section { padding: 72px 20px; }
-      .section-title { font-size: 30px; margin-bottom: 40px; }
-      .about-content { grid-template-columns: 1fr; gap: 36px; }
-      .about-image { height: 280px; }
-      .services-grid { grid-template-columns: 1fr; }
-      .sectors-grid { grid-template-columns: 1fr; gap: 0; }
+      .nav-menu { padding: 60px 20px; }
+      .hero { padding: 0 20px 44px; }
+      .hero h1 { font-size: 48px; letter-spacing: -0.03em; }
+      .hero-bottom { flex-direction: column; align-items: flex-start; }
+      .hero-logo { height: 56px; }
+      .section { padding: 80px 20px; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .service-tag { display: none; }
+      .service-name { font-size: 18px; }
+      .sectors-grid { grid-template-columns: 1fr; }
       .projects-grid { grid-template-columns: 1fr; }
-      .project-image { height: 260px; }
-      .contact-section { padding: 72px 20px; }
-      .contact-section h2 { font-size: 34px; }
+      .contact-section { padding: 80px 20px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      footer { padding: 48px 20px 32px; }
       .footer-grid { grid-template-columns: 1fr; gap: 36px; }
-      footer { padding: 48px 20px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- git push origin main --force background -->
   <canvas id="bg-canvas"></canvas>
-
-  <!-- Custom cursor -->
-  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- Navigation -->
   <header class="nav-header">
-    <div class="logo">
-      <img src="uploads/logo ic.jpeg" alt="Meridian">
-    </div>
+    <div class="logo"><img src="uploads/logo ic.jpeg" alt="Meridian"></div>
     <button class="menu-toggle" id="menuToggle" aria-label="Open menu">&#9776;</button>
   </header>
 
@@ -359,119 +354,182 @@
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-content">
-      <img src="uploads/logo ic.jpeg" alt="Meridian" style="height:72px;width:auto;object-fit:contain;margin-bottom:36px;display:block;margin-left:auto;margin-right:auto;">
-      <h1 id="heroTitle">Brand Stories That Move People</h1>
-      <p class="hero-subtitle">Strategy, design, and storytelling that cuts through the noise<br>and builds lasting connections with your audience.</p>
-      <a href="#contact" class="cta-button">Let's Talk</a>
+    <p class="hero-eyebrow">Brand Strategy & Creative Studio — Est. 1996</p>
+    <h1>
+      <span class="line-wrap"><span class="line-inner" id="heroLine1">Brand Stories</span></span>
+      <span class="line-wrap"><span class="line-inner" id="heroLine2" style="transition-delay:0.12s">That Move People</span></span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-subtitle">Strategy, design, and storytelling that cuts through the noise and builds lasting connections with your audience.</p>
+      <img src="uploads/logo ic.jpeg" alt="Meridian" class="hero-logo">
+      <a href="#contact" class="cta-button">Let's Talk <span class="cta-arrow">↗</span></a>
     </div>
   </section>
 
+  <!-- Marquee -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Brand Strategy <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Visual Identity <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Campaign Development <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Digital Design <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Content & Copywriting <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Guidelines <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Strategy <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Visual Identity <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Campaign Development <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Digital Design <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Content & Copywriting <span class="marquee-dot"></span></span>
+      <span class="marquee-item">Brand Guidelines <span class="marquee-dot"></span></span>
+    </div>
+  </div>
+
   <!-- About -->
   <section class="section" id="about">
-    <h2 class="section-title reveal">About</h2>
-    <div class="about-content">
-      <div class="about-text reveal">
-        <p>For three decades, we've been crafting brands that stand out. <span class="about-highlight">Meridian</span> brings together strategists, designers, and storytellers obsessed with one thing: creating narratives that resonate.</p>
-        <p>We don't do generic. Every campaign, identity, and strategy we develop is built on deep research, bold thinking, and relentless attention to craft. We work with ambitious brands across every sector—from startups to established leaders—helping them discover their voice and own their space in the market.</p>
-        <p>We're strategists who think visually, designers who think strategically, and storytellers who understand business. Your brand has a story worth telling. We'll help you tell it right.</p>
+    <div class="section-label reveal">About</div>
+    <div class="about-grid">
+      <div>
+        <h2 class="section-title" id="aboutTitle">
+          <span class="line-wrap"><span class="line-inner">Three decades of</span></span>
+          <span class="line-wrap"><span class="line-inner" style="transition-delay:0.1s">bold brand stories.</span></span>
+        </h2>
+        <div class="about-text reveal" style="transition-delay:0.15s">
+          <p><span class="about-highlight">Meridian</span> brings together strategists, designers, and storytellers obsessed with one thing: creating narratives that resonate.</p>
+          <p>We don't do generic. Every campaign, identity, and strategy we develop is built on deep research, bold thinking, and relentless attention to craft.</p>
+          <p>We're strategists who think visually, designers who think strategically, and storytellers who understand business.</p>
+        </div>
       </div>
-      <div class="about-image reveal" style="transition-delay:0.15s">
-        Three Decades of Bold Brand Stories
-      </div>
+      <div class="about-image reveal" style="transition-delay:0.2s">Three Decades of Bold Brand Stories</div>
     </div>
   </section>
 
   <!-- Services -->
   <section class="section" id="services">
-    <h2 class="section-title reveal">Services</h2>
-    <div class="services-grid">
-      <div class="service-item reveal"><div class="service-number">01</div><h3>Brand Strategy</h3><p>Positioning workshops, market analysis, and narrative development that uncover your competitive edge and define your unique voice.</p></div>
-      <div class="service-item reveal" style="transition-delay:0.1s"><div class="service-number">02</div><h3>Visual Identity</h3><p>Logo design, color systems, typography, and complete design language systems that make your brand unmistakable.</p></div>
-      <div class="service-item reveal" style="transition-delay:0.05s"><div class="service-number">03</div><h3>Campaign Development</h3><p>Integrated creative campaigns across digital, social, print, and experiential—built on insight and designed to drive results.</p></div>
-      <div class="service-item reveal" style="transition-delay:0.15s"><div class="service-number">04</div><h3>Content & Copywriting</h3><p>Strategic messaging, brand voice development, and content creation that tells your story with clarity and impact.</p></div>
-      <div class="service-item reveal" style="transition-delay:0.1s"><div class="service-number">05</div><h3>Digital Design</h3><p>Web design, app design, and digital experiences that convert visitors into customers while embodying your brand identity.</p></div>
-      <div class="service-item reveal" style="transition-delay:0.2s"><div class="service-number">06</div><h3>Brand Guidelines</h3><p>Comprehensive brand guidelines, collateral systems, and launch strategy to ensure consistent implementation across all touchpoints.</p></div>
+    <div class="section-label reveal">Services</div>
+    <div class="services-list">
+      <div class="service-row reveal">
+        <div class="service-left"><span class="service-num">01</span><span class="service-name">Brand Strategy</span></div>
+        <span class="service-tag">Positioning</span>
+        <span class="service-arrow">↗</span>
+      </div>
+      <div class="service-row reveal" style="transition-delay:0.05s">
+        <div class="service-left"><span class="service-num">02</span><span class="service-name">Visual Identity</span></div>
+        <span class="service-tag">Design</span>
+        <span class="service-arrow">↗</span>
+      </div>
+      <div class="service-row reveal" style="transition-delay:0.1s">
+        <div class="service-left"><span class="service-num">03</span><span class="service-name">Campaign Development</span></div>
+        <span class="service-tag">Integrated</span>
+        <span class="service-arrow">↗</span>
+      </div>
+      <div class="service-row reveal" style="transition-delay:0.15s">
+        <div class="service-left"><span class="service-num">04</span><span class="service-name">Content & Copywriting</span></div>
+        <span class="service-tag">Messaging</span>
+        <span class="service-arrow">↗</span>
+      </div>
+      <div class="service-row reveal" style="transition-delay:0.2s">
+        <div class="service-left"><span class="service-num">05</span><span class="service-name">Digital Design</span></div>
+        <span class="service-tag">Web & App</span>
+        <span class="service-arrow">↗</span>
+      </div>
+      <div class="service-row reveal" style="transition-delay:0.25s">
+        <div class="service-left"><span class="service-num">06</span><span class="service-name">Brand Guidelines</span></div>
+        <span class="service-tag">Documentation</span>
+        <span class="service-arrow">↗</span>
+      </div>
     </div>
   </section>
 
   <!-- Sectors -->
   <section class="section" id="sectors">
-    <h2 class="section-title reveal">Sectors</h2>
+    <div class="section-label reveal">Sectors</div>
     <div class="sectors-grid">
       <div class="sector-item reveal">
+        <div class="sector-num">01</div>
         <h4>Technology</h4>
-        <p>SaaS, fintech, and software brands. We translate complexity into compelling narratives that resonate with technical and non-technical audiences.</p>
+        <p>SaaS, fintech, and software brands. We translate complexity into compelling narratives.</p>
       </div>
       <div class="sector-item reveal" style="transition-delay:0.1s">
+        <div class="sector-num">02</div>
         <h4>Lifestyle & Retail</h4>
-        <p>Consumer brands, fashion, food, and wellness. We create emotional connections that drive loyalty and repeat engagement.</p>
+        <p>Consumer brands, fashion, food, and wellness. Emotional connections that drive loyalty.</p>
       </div>
       <div class="sector-item reveal" style="transition-delay:0.2s">
+        <div class="sector-num">03</div>
         <h4>B2B & Enterprise</h4>
-        <p>Corporate and business services. We build brands that establish authority, build trust, and win at scale.</p>
+        <p>Corporate and business services. Brands that establish authority and win at scale.</p>
       </div>
     </div>
   </section>
 
   <!-- Projects -->
   <section class="section" id="projects">
-    <h2 class="section-title reveal">Selected Work</h2>
+    <div class="section-label reveal">Selected Work</div>
     <div class="projects-grid">
       <div class="project-card reveal">
-        <div class="project-image"><img src="uploads/maximilian-bungart-Vaf7VbqqxB0-unsplash.jpg" alt="Zenith"></div>
-        <div class="project-info">
-          <h4>Zenith</h4>
-          <p>Complete brand refresh and campaign strategy for a growing fintech platform entering new markets.</p>
+        <div class="project-image">
+          <img src="uploads/maximilian-bungart-Vaf7VbqqxB0-unsplash.jpg" alt="Zenith">
+          <div class="project-overlay"><h4>Zenith</h4><p>SaaS Rebrand · Fintech</p></div>
         </div>
+        <div class="project-info"><h4>Zenith</h4><p>Brand refresh · Fintech</p></div>
       </div>
-      <div class="project-card reveal" style="transition-delay:0.12s">
-        <div class="project-image"><img src="uploads/long-chung-VeIViU2Suek-unsplash.jpg" alt="Ember"></div>
-        <div class="project-info">
-          <h4>Ember</h4>
-          <p>Full brand identity and go-to-market campaign for a direct-to-consumer wellness startup.</p>
+      <div class="project-card reveal" style="transition-delay:0.1s">
+        <div class="project-image">
+          <img src="uploads/long-chung-VeIViU2Suek-unsplash.jpg" alt="Ember">
+          <div class="project-overlay"><h4>Ember</h4><p>Consumer Brand Launch · Wellness</p></div>
         </div>
+        <div class="project-info"><h4>Ember</h4><p>Brand launch · Wellness</p></div>
       </div>
-      <div class="project-card reveal" style="transition-delay:0.06s">
-        <div class="project-image"><img src="uploads/markus-spiske-BfphcCvhl6E-unsplash.jpg" alt="Catalyst"></div>
-        <div class="project-info">
-          <h4>Catalyst</h4>
-          <p>Strategic positioning and thought leadership campaign for an enterprise software company.</p>
+      <div class="project-card reveal" style="transition-delay:0.05s">
+        <div class="project-image">
+          <img src="uploads/markus-spiske-BfphcCvhl6E-unsplash.jpg" alt="Catalyst">
+          <div class="project-overlay"><h4>Catalyst</h4><p>B2B Positioning · Enterprise</p></div>
         </div>
+        <div class="project-info"><h4>Catalyst</h4><p>B2B positioning · Enterprise</p></div>
       </div>
-      <div class="project-card reveal" style="transition-delay:0.18s">
-        <div class="project-image">Volt — Brand Identity</div>
-        <div class="project-info">
-          <h4>Volt</h4>
-          <p>Complete visual identity and marketing launch for an energy-tech startup disrupting the sector.</p>
-        </div>
+      <div class="project-card reveal" style="transition-delay:0.15s">
+        <div class="project-image">Volt — Coming Soon</div>
+        <div class="project-info"><h4>Volt</h4><p>Brand identity · Energy-tech</p></div>
       </div>
     </div>
   </section>
 
   <!-- Contact -->
   <section class="contact-section" id="contact">
-    <h2 class="reveal">Bring Your Vision to Life</h2>
-    <p class="reveal" style="transition-delay:0.1s">Let's create something remarkable together. Tell us about your project.</p>
-    <form class="contact-form reveal" id="contactForm" style="transition-delay:0.2s" novalidate>
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" id="name" name="name" placeholder="Your name" required>
+    <div class="contact-inner">
+      <h2 id="contactTitle">
+        <span class="line-wrap"><span class="line-inner">Bring Your</span></span>
+        <span class="line-wrap"><span class="line-inner" style="transition-delay:0.09s">Vision to Life.</span></span>
+      </h2>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <p>Let's create something remarkable together. Tell us about your project and we'll be in touch within 24 hours.</p>
+          <div class="contact-detail">
+            hello@meridian.studio<br>
+            +1 (555) 123-4567
+          </div>
+        </div>
+        <form class="contact-form reveal" id="contactForm" style="transition-delay:0.15s" novalidate>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company" placeholder="Your company">
+          </div>
+          <div class="form-group">
+            <label for="message">Project Brief</label>
+            <textarea id="message" name="message" placeholder="Tell us about your project" required></textarea>
+          </div>
+          <button type="submit" class="cta-button">Send Message <span class="cta-arrow">↗</span></button>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="your@email.com" required>
-      </div>
-      <div class="form-group">
-        <label for="company">Company</label>
-        <input type="text" id="company" name="company" placeholder="Your company">
-      </div>
-      <div class="form-group">
-        <label for="message">Project Brief</label>
-        <textarea id="message" name="message" placeholder="Tell us about your project" required></textarea>
-      </div>
-      <button type="submit" class="cta-button">Send</button>
-    </form>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -488,107 +546,109 @@
         </div>
         <div class="footer-column">
           <h5>Follow</h5>
-          <p>
-            <a href="#">Instagram</a><br>
-            <a href="#">LinkedIn</a>
-          </p>
+          <p><a href="#">Instagram</a><br><a href="#">LinkedIn</a></p>
         </div>
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 Meridian Studio. All rights reserved.</p>
+        <p>Brand Strategy & Creative</p>
       </div>
     </div>
   </footer>
 
   <script>
-    // ── git push origin main --force canvas background ──
+    // ── git push origin main --force canvas (ultra-subtle on light bg) ──
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     const CMD = 'git push origin main --force  ';
     const FS = 13;
 
-    function resizeCanvas() {
+    function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-    resizeCanvas();
+    resize();
+
+    let drops = Array.from({ length: Math.floor(window.innerWidth / FS) }, () => Math.random() * -80);
     window.addEventListener('resize', () => {
-      resizeCanvas();
+      resize();
       drops = Array.from({ length: Math.floor(canvas.width / FS) }, () => Math.random() * -80);
     });
 
-    let drops = Array.from({ length: Math.floor(canvas.width / FS) }, () => Math.random() * -80);
-
-    function drawMatrix() {
-      ctx.fillStyle = 'rgba(8,12,15,0.055)';
+    function draw() {
+      ctx.fillStyle = 'rgba(244,243,239,0.075)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = `${FS}px 'Courier New', monospace`;
-
       for (let i = 0; i < drops.length; i++) {
         const ch = CMD[Math.floor(Math.random() * CMD.length)];
-        const brightness = 0.04 + Math.random() * 0.07;
-        ctx.fillStyle = `rgba(180,220,180,${brightness})`;
+        ctx.fillStyle = `rgba(13,13,13,${0.015 + Math.random() * 0.015})`;
         ctx.fillText(ch, i * FS, drops[i] * FS);
         if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i] += 0.22;
+        drops[i] += 0.18;
       }
     }
-    setInterval(drawMatrix, 38);
+    setInterval(draw, 42);
 
     // ── Custom cursor ──
-    const cursorDot  = document.getElementById('cursor');
-    const cursorRing = document.getElementById('cursorRing');
+    const dot  = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
     let mx = 0, my = 0, rx = 0, ry = 0;
 
     document.addEventListener('mousemove', e => {
       mx = e.clientX; my = e.clientY;
-      cursorDot.style.left = mx + 'px';
-      cursorDot.style.top  = my + 'px';
+      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
     });
-
-    (function animateRing() {
-      rx += (mx - rx) * 0.11;
-      ry += (my - ry) * 0.11;
-      cursorRing.style.left = rx + 'px';
-      cursorRing.style.top  = ry + 'px';
-      requestAnimationFrame(animateRing);
+    (function loop() {
+      rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(loop);
     })();
 
-    document.querySelectorAll('a, button, .project-card, .service-item, input, textarea').forEach(el => {
-      el.addEventListener('mouseenter', () => cursorRing.classList.add('expanded'));
-      el.addEventListener('mouseleave', () => cursorRing.classList.remove('expanded'));
+    document.querySelectorAll('a, button, .project-card, .service-row, .sector-item, input, textarea').forEach(el => {
+      el.addEventListener('mouseenter', () => ring.classList.add('expanded'));
+      el.addEventListener('mouseleave', () => ring.classList.remove('expanded'));
     });
 
-    // ── Ripple on click ──
     document.addEventListener('click', e => {
       const r = document.createElement('div');
       r.className = 'ripple';
-      r.style.left = e.clientX + 'px';
-      r.style.top  = e.clientY + 'px';
+      r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
       document.body.appendChild(r);
       setTimeout(() => r.remove(), 800);
     });
 
-    // ── Hero word reveal ──
-    const heroTitle = document.getElementById('heroTitle');
-    heroTitle.innerHTML = heroTitle.textContent.trim().split(' ')
-      .map((w, i) => `<span class="word" style="transition-delay:${0.1 + i * 0.09}s">${w}</span>`)
-      .join(' ');
-    requestAnimationFrame(() =>
-      setTimeout(() => heroTitle.querySelectorAll('.word').forEach(w => w.classList.add('visible')), 150)
-    );
-
-    // ── Menu toggle ──
+    // ── Menu ──
     const menuToggle = document.getElementById('menuToggle');
     const navClose   = document.getElementById('navClose');
     const navMenu    = document.getElementById('navMenu');
-
-    function openMenu() { navMenu.classList.add('active'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
-    function closeMenu() { navMenu.classList.remove('active'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
-
+    function openMenu()  { navMenu.classList.add('active'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { navMenu.classList.remove('active'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
     menuToggle.addEventListener('click', openMenu);
     navClose.addEventListener('click', closeMenu);
     document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', closeMenu));
+
+    // ── Hero line reveal on load ──
+    setTimeout(() => {
+      document.getElementById('heroLine1').classList.add('visible');
+      document.getElementById('heroLine2').classList.add('visible');
+    }, 120);
+
+    // ── Scroll: fade reveals ──
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+    // ── Scroll: line reveals for section headings ──
+    const lineObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('.line-inner').forEach(l => l.classList.add('visible'));
+          lineObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    document.querySelectorAll('#aboutTitle, #contactTitle').forEach(el => lineObs.observe(el));
 
     // ── Contact form ──
     document.getElementById('contactForm').addEventListener('submit', function(e) {
@@ -596,30 +656,6 @@
       alert("Thank you for your message. We'll be in touch soon!");
       this.reset();
     });
-
-    // ── Scroll reveal ──
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-    // ── Section title underline on scroll ──
-    const titleObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          titleObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-
-    document.querySelectorAll('.section-title').forEach(el => titleObserver.observe(el));
   </script>
 
 </body>
