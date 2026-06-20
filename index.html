@@ -10,9 +10,42 @@
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: #1a1a1a;
-      background: #fafafa;
+      color: #e8e8e8;
+      background: #080c0f;
       overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ── Canvas background ── */
+    #bg-canvas {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* ── Custom cursor ── */
+    .cursor {
+      position: fixed; width: 6px; height: 6px;
+      background: #ffffff; border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+    .cursor-ring {
+      position: fixed; width: 32px; height: 32px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50%; pointer-events: none; z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+    }
+    .cursor-ring.expanded { width: 52px; height: 52px; border-color: rgba(255,255,255,0.6); }
+    .ripple {
+      position: fixed; width: 0; height: 0; border-radius: 50%;
+      background: rgba(255,255,255,0.12); pointer-events: none; z-index: 9997;
+      transform: translate(-50%, -50%);
+      animation: rippleOut 0.75s ease-out forwards;
+    }
+    @keyframes rippleOut {
+      to { width: 160px; height: 160px; opacity: 0; }
     }
 
     /* ── Animations ── */
@@ -25,46 +58,69 @@
       to   { opacity: 1; }
     }
 
+    /* ── Word micro-animation ── */
+    .word {
+      display: inline-block;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .word.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
     /* ── Navigation ── */
     .nav-header {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: white;
+      background: rgba(8,12,15,0.82);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
       padding: 20px 32px;
       display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
     }
     .logo {
-      font-size: 16px; font-weight: 600; letter-spacing: 2px;
-      color: #1a1a1a; text-transform: uppercase;
       display: flex; align-items: center; justify-content: center;
     }
-    .logo img { height: 36px; width: auto; object-fit: contain; }
+    .logo img { height: 36px; width: auto; object-fit: contain; filter: brightness(0) invert(1); }
     .menu-toggle {
-      background: none; border: none; cursor: pointer;
-      font-size: 20px; color: #1a1a1a; line-height: 1;
-      padding: 4px;
+      background: none; border: none; cursor: none;
+      font-size: 20px; color: #e8e8e8; line-height: 1; padding: 4px;
+      transition: opacity 0.2s;
     }
+    .menu-toggle:hover { opacity: 0.5; }
 
     /* Full-screen overlay menu */
     .nav-menu {
       position: fixed; top: 0; left: -100%; width: 100%; height: 100vh;
-      background: white; z-index: 999;
+      background: #080c0f; z-index: 999;
       display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
-      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: left 0.4s cubic-bezier(0.4,0,0.2,1);
       padding: 60px 32px;
     }
     .nav-menu.active { left: 0; }
     .nav-menu a {
-      text-decoration: none; color: #1a1a1a;
+      text-decoration: none; color: #e8e8e8;
       font-size: 26px; font-weight: 300;
-      transition: opacity 0.2s;
+      position: relative; transition: color 0.2s;
     }
-    .nav-menu a:hover { opacity: 0.5; }
+    .nav-menu a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 1px; background: #fff;
+      transition: width 0.3s ease;
+    }
+    .nav-menu a:hover { color: #fff; }
+    .nav-menu a:hover::after { width: 100%; }
     .nav-close {
       position: absolute; top: 20px; right: 32px;
-      background: none; border: none; font-size: 26px; cursor: pointer;
-      color: #1a1a1a; line-height: 1;
+      background: none; border: none; font-size: 26px;
+      cursor: none; color: #e8e8e8; line-height: 1;
+      transition: opacity 0.2s;
     }
+    .nav-close:hover { opacity: 0.5; }
 
     /* ── Hero ── */
     .hero {
@@ -72,40 +128,54 @@
       min-height: calc(100vh - 70px);
       display: flex; align-items: center; justify-content: center;
       padding: 60px 32px;
-      background: #fafafa;
+      position: relative; z-index: 1;
     }
     .hero-content {
       text-align: center; max-width: 800px;
-      animation: fadeInUp 0.9s ease both;
+      animation: fadeIn 1s ease both;
     }
     .hero h1 {
       font-size: 64px; font-weight: 300; line-height: 1.15;
-      margin-bottom: 24px; color: #1a1a1a;
+      margin-bottom: 24px; color: #ffffff;
     }
     .hero-subtitle {
-      font-size: 18px; color: #666; line-height: 1.7;
+      font-size: 18px; color: rgba(232,232,232,0.6); line-height: 1.7;
       margin-bottom: 48px; font-weight: 300;
     }
     .cta-button {
       display: inline-block; padding: 14px 36px;
-      background: #1a1a1a; color: white;
+      background: #ffffff; color: #080c0f;
       text-decoration: none; font-weight: 500;
-      border-radius: 2px; border: none;
-      transition: opacity 0.2s ease; cursor: pointer;
-      font-size: 14px; letter-spacing: 0.5px;
-      font-family: inherit;
+      border-radius: 2px; border: none; cursor: none;
+      font-size: 14px; letter-spacing: 0.5px; font-family: inherit;
+      position: relative; overflow: hidden;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
-    .cta-button:hover { opacity: 0.7; }
+    .cta-button::after {
+      content: ''; position: absolute;
+      top: 0; left: -100%; width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+      transition: left 0.5s ease;
+    }
+    .cta-button:hover::after { left: 150%; }
+    .cta-button:hover { opacity: 0.9; transform: translateY(-2px); }
+    .cta-button:active { transform: translateY(0); }
 
     /* ── Generic section ── */
     .section {
-      padding: 100px 32px;
-      max-width: 1100px; margin: 0 auto;
+      padding: 100px 32px; max-width: 1100px; margin: 0 auto;
+      position: relative; z-index: 1;
     }
     .section-title {
-      font-size: 42px; font-weight: 300; margin-bottom: 60px;
-      color: #1a1a1a;
+      font-size: 42px; font-weight: 300; margin-bottom: 60px; color: #ffffff;
+      position: relative; display: inline-block;
     }
+    .section-title::after {
+      content: ''; position: absolute; bottom: -12px; left: 0;
+      width: 0; height: 1px; background: rgba(255,255,255,0.25);
+      transition: width 0.9s ease 0.2s;
+    }
+    .section-title.visible::after { width: 100%; }
 
     /* ── About ── */
     .about-content {
@@ -113,146 +183,162 @@
     }
     .about-text p {
       font-size: 16px; line-height: 1.85; margin-bottom: 24px;
-      color: #555; font-weight: 300;
+      color: rgba(232,232,232,0.6); font-weight: 300;
     }
     .about-text p:last-child { margin-bottom: 0; }
-    .about-highlight { color: #1a1a1a; font-weight: 500; }
+    .about-highlight { color: #ffffff; font-weight: 500; }
     .about-image {
       width: 100%; height: 450px;
-      background: #f0f0f0; border-radius: 2px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07); border-radius: 2px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: #aaa; letter-spacing: 0.5px;
+      font-size: 13px; color: rgba(255,255,255,0.2); letter-spacing: 0.5px;
       overflow: hidden;
     }
     .about-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     /* ── Services ── */
-    .services-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px;
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: rgba(255,255,255,0.06); }
+    .service-item {
+      padding: 36px 32px;
+      background: #080c0f;
+      transition: background 0.3s ease, transform 0.3s ease;
     }
-    .service-item h3 {
-      font-size: 18px; font-weight: 500; margin-bottom: 12px; color: #1a1a1a;
-    }
-    .service-item p {
-      font-size: 14px; line-height: 1.7; color: #777; font-weight: 300;
+    .service-item:hover { background: rgba(255,255,255,0.04); transform: translateY(-2px); }
+    .service-item h3 { font-size: 18px; font-weight: 500; margin-bottom: 12px; color: #ffffff; }
+    .service-item p { font-size: 14px; line-height: 1.7; color: rgba(232,232,232,0.5); font-weight: 300; }
+    .service-number {
+      font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 2px;
+      font-weight: 500; margin-bottom: 20px; font-variant-numeric: tabular-nums;
     }
 
     /* ── Sectors ── */
-    .sectors-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    .sectors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .sector-item {
+      padding: 28px 0;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.3s ease;
     }
-    .sector-item h4 { font-size: 16px; font-weight: 500; margin-bottom: 12px; }
-    .sector-item p { font-size: 13px; color: #777; line-height: 1.7; font-weight: 300; }
+    .sector-item:hover { border-color: rgba(255,255,255,0.3); }
+    .sector-item h4 { font-size: 16px; font-weight: 500; margin-bottom: 12px; color: #ffffff; }
+    .sector-item p { font-size: 13px; color: rgba(232,232,232,0.5); line-height: 1.7; font-weight: 300; }
 
     /* ── Projects ── */
-    .projects-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px; }
+    .project-card {
+      border-radius: 2px; overflow: hidden;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
     }
-    .project-card { border-radius: 2px; overflow: hidden; background: white; }
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+      border-color: rgba(255,255,255,0.16);
+    }
     .project-image {
       width: 100%; height: 320px;
-      background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
+      background: rgba(255,255,255,0.03);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; color: #bbb; letter-spacing: 0.5px;
+      font-size: 13px; color: rgba(255,255,255,0.18); letter-spacing: 0.5px;
       overflow: hidden;
     }
-    .project-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .project-info { padding: 28px 0; }
-    .project-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
-    .project-info p { font-size: 13px; color: #888; font-weight: 300; line-height: 1.6; }
+    .project-image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s ease;
+    }
+    .project-card:hover .project-image img { transform: scale(1.05); }
+    .project-info { padding: 28px; }
+    .project-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #ffffff; }
+    .project-info p { font-size: 13px; color: rgba(232,232,232,0.45); font-weight: 300; line-height: 1.6; }
 
     /* ── Contact ── */
     .contact-section {
-      background: #1a1a1a; color: white;
-      padding: 100px 32px; text-align: center;
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      color: #e8e8e8; padding: 100px 32px; text-align: center;
+      position: relative; z-index: 1;
     }
-    .contact-section h2 {
-      font-size: 48px; font-weight: 300; margin-bottom: 20px;
-    }
-    .contact-section > p {
-      font-size: 16px; margin-bottom: 52px; font-weight: 300; color: rgba(255,255,255,0.7);
-    }
+    .contact-section h2 { font-size: 48px; font-weight: 300; margin-bottom: 20px; color: #ffffff; }
+    .contact-section > p { font-size: 16px; margin-bottom: 52px; font-weight: 300; color: rgba(232,232,232,0.55); }
     .contact-form { max-width: 500px; margin: 0 auto; }
     .form-group { margin-bottom: 28px; text-align: left; }
     .form-group label {
       display: block; font-size: 11px; margin-bottom: 10px;
       font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.6);
+      color: rgba(232,232,232,0.4);
     }
     .form-group input,
     .form-group textarea {
       width: 100%; padding: 12px 0;
-      border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
+      border: none; border-bottom: 1px solid rgba(255,255,255,0.15);
       font-family: inherit; font-size: 15px;
-      background: transparent; color: white;
-      transition: border-color 0.2s; outline: none;
+      background: transparent; color: #e8e8e8;
+      transition: border-color 0.2s; outline: none; cursor: none;
     }
     .form-group input::placeholder,
-    .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .form-group textarea::placeholder { color: rgba(232,232,232,0.22); }
     .form-group input:focus,
-    .form-group textarea:focus { border-bottom-color: rgba(255,255,255,0.7); }
+    .form-group textarea:focus { border-bottom-color: rgba(255,255,255,0.55); }
     .form-group textarea { resize: vertical; min-height: 100px; }
-    .contact-section .cta-button {
-      background: white; color: #1a1a1a; width: 100%; margin-top: 16px;
-    }
-    .contact-section .cta-button:hover { opacity: 0.85; }
+    .contact-section .cta-button { background: #fff; color: #080c0f; width: 100%; margin-top: 16px; }
 
     /* ── Footer ── */
     footer {
-      background: #f5f5f5;
-      padding: 60px 32px;
-      border-top: 1px solid #eee;
+      background: rgba(0,0,0,0.5); padding: 60px 32px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      position: relative; z-index: 1;
     }
     .footer-content { max-width: 1100px; margin: 0 auto; }
     .footer-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px;
-      margin-bottom: 60px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px; margin-bottom: 60px;
     }
-    .footer-logo { height: 44px; width: auto; margin-bottom: 16px; object-fit: contain; }
+    .footer-logo { height: 44px; width: auto; margin-bottom: 16px; object-fit: contain; filter: brightness(0) invert(1); opacity: 0.7; }
     .footer-column h5 {
       font-size: 11px; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 1.5px; margin-bottom: 16px; color: #1a1a1a;
+      letter-spacing: 1.5px; margin-bottom: 16px; color: rgba(255,255,255,0.85);
     }
-    .footer-column p {
-      font-size: 13px; color: #777; line-height: 1.9; font-weight: 300;
-    }
-    .footer-column a { color: #1a1a1a; text-decoration: none; }
-    .footer-column a:hover { opacity: 0.6; }
+    .footer-column p { font-size: 13px; color: rgba(232,232,232,0.4); line-height: 1.9; font-weight: 300; }
+    .footer-column a { color: rgba(232,232,232,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-column a:hover { color: #ffffff; }
     .footer-bottom {
-      font-size: 12px; color: #aaa; text-align: center;
-      padding-top: 40px; border-top: 1px solid #eee;
+      font-size: 12px; color: rgba(232,232,232,0.25); text-align: center;
+      padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06);
     }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
+      body { cursor: auto; }
+      .cursor, .cursor-ring { display: none; }
       .nav-header { padding: 16px 20px; }
       .nav-menu { gap: 32px; }
       .nav-menu a { font-size: 22px; }
-
       .hero { margin-top: 60px; min-height: calc(100vh - 60px); padding: 40px 20px; }
       .hero h1 { font-size: 38px; }
       .hero-subtitle { font-size: 16px; }
-
       .section { padding: 72px 20px; }
       .section-title { font-size: 30px; margin-bottom: 40px; }
-
       .about-content { grid-template-columns: 1fr; gap: 36px; }
       .about-image { height: 280px; }
-
-      .services-grid { grid-template-columns: 1fr; gap: 36px; }
-      .sectors-grid { grid-template-columns: 1fr; gap: 28px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .sectors-grid { grid-template-columns: 1fr; gap: 0; }
       .projects-grid { grid-template-columns: 1fr; }
       .project-image { height: 260px; }
-
       .contact-section { padding: 72px 20px; }
       .contact-section h2 { font-size: 34px; }
-
       .footer-grid { grid-template-columns: 1fr; gap: 36px; }
       footer { padding: 48px 20px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- git push origin main --force background -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- Navigation -->
   <header class="nav-header">
@@ -274,8 +360,8 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <img src="uploads/marque logo.png" alt="Meridian" style="height:72px;width:auto;object-fit:contain;margin-bottom:36px;display:block;margin-left:auto;margin-right:auto;">
-      <h1>Brand Stories That<br>Move People</h1>
+      <img src="uploads/marque logo.png" alt="Meridian" style="height:72px;width:auto;object-fit:contain;margin-bottom:36px;display:block;margin-left:auto;margin-right:auto;filter:brightness(0) invert(1);">
+      <h1 id="heroTitle">Brand Stories That Move People</h1>
       <p class="hero-subtitle">Strategy, design, and storytelling that cuts through the noise<br>and builds lasting connections with your audience.</p>
       <a href="#contact" class="cta-button">Let's Talk</a>
     </div>
@@ -283,14 +369,14 @@
 
   <!-- About -->
   <section class="section" id="about">
-    <h2 class="section-title">About</h2>
+    <h2 class="section-title reveal">About</h2>
     <div class="about-content">
-      <div class="about-text">
+      <div class="about-text reveal">
         <p>For three decades, we've been crafting brands that stand out. <span class="about-highlight">Meridian</span> brings together strategists, designers, and storytellers obsessed with one thing: creating narratives that resonate.</p>
         <p>We don't do generic. Every campaign, identity, and strategy we develop is built on deep research, bold thinking, and relentless attention to craft. We work with ambitious brands across every sector—from startups to established leaders—helping them discover their voice and own their space in the market.</p>
         <p>We're strategists who think visually, designers who think strategically, and storytellers who understand business. Your brand has a story worth telling. We'll help you tell it right.</p>
       </div>
-      <div class="about-image">
+      <div class="about-image reveal" style="transition-delay:0.15s">
         Three Decades of Bold Brand Stories
       </div>
     </div>
@@ -298,48 +384,30 @@
 
   <!-- Services -->
   <section class="section" id="services">
-    <h2 class="section-title">Services</h2>
+    <h2 class="section-title reveal">Services</h2>
     <div class="services-grid">
-      <div class="service-item">
-        <h3>Brand Strategy</h3>
-        <p>Positioning workshops, market analysis, and narrative development that uncover your competitive edge and define your unique voice.</p>
-      </div>
-      <div class="service-item">
-        <h3>Visual Identity</h3>
-        <p>Logo design, color systems, typography, and complete design language systems that make your brand unmistakable.</p>
-      </div>
-      <div class="service-item">
-        <h3>Campaign Development</h3>
-        <p>Integrated creative campaigns across digital, social, print, and experiential—built on insight and designed to drive results.</p>
-      </div>
-      <div class="service-item">
-        <h3>Content & Copywriting</h3>
-        <p>Strategic messaging, brand voice development, and content creation that tells your story with clarity and impact.</p>
-      </div>
-      <div class="service-item">
-        <h3>Digital Design</h3>
-        <p>Web design, app design, and digital experiences that convert visitors into customers while embodying your brand identity.</p>
-      </div>
-      <div class="service-item">
-        <h3>Brand Guidelines</h3>
-        <p>Comprehensive brand guidelines, collateral systems, and launch strategy to ensure consistent implementation across all touchpoints.</p>
-      </div>
+      <div class="service-item reveal"><div class="service-number">01</div><h3>Brand Strategy</h3><p>Positioning workshops, market analysis, and narrative development that uncover your competitive edge and define your unique voice.</p></div>
+      <div class="service-item reveal" style="transition-delay:0.1s"><div class="service-number">02</div><h3>Visual Identity</h3><p>Logo design, color systems, typography, and complete design language systems that make your brand unmistakable.</p></div>
+      <div class="service-item reveal" style="transition-delay:0.05s"><div class="service-number">03</div><h3>Campaign Development</h3><p>Integrated creative campaigns across digital, social, print, and experiential—built on insight and designed to drive results.</p></div>
+      <div class="service-item reveal" style="transition-delay:0.15s"><div class="service-number">04</div><h3>Content & Copywriting</h3><p>Strategic messaging, brand voice development, and content creation that tells your story with clarity and impact.</p></div>
+      <div class="service-item reveal" style="transition-delay:0.1s"><div class="service-number">05</div><h3>Digital Design</h3><p>Web design, app design, and digital experiences that convert visitors into customers while embodying your brand identity.</p></div>
+      <div class="service-item reveal" style="transition-delay:0.2s"><div class="service-number">06</div><h3>Brand Guidelines</h3><p>Comprehensive brand guidelines, collateral systems, and launch strategy to ensure consistent implementation across all touchpoints.</p></div>
     </div>
   </section>
 
   <!-- Sectors -->
   <section class="section" id="sectors">
-    <h2 class="section-title">Sectors</h2>
+    <h2 class="section-title reveal">Sectors</h2>
     <div class="sectors-grid">
-      <div class="sector-item">
+      <div class="sector-item reveal">
         <h4>Technology</h4>
         <p>SaaS, fintech, and software brands. We translate complexity into compelling narratives that resonate with technical and non-technical audiences.</p>
       </div>
-      <div class="sector-item">
+      <div class="sector-item reveal" style="transition-delay:0.1s">
         <h4>Lifestyle & Retail</h4>
         <p>Consumer brands, fashion, food, and wellness. We create emotional connections that drive loyalty and repeat engagement.</p>
       </div>
-      <div class="sector-item">
+      <div class="sector-item reveal" style="transition-delay:0.2s">
         <h4>B2B & Enterprise</h4>
         <p>Corporate and business services. We build brands that establish authority, build trust, and win at scale.</p>
       </div>
@@ -348,30 +416,30 @@
 
   <!-- Projects -->
   <section class="section" id="projects">
-    <h2 class="section-title">Selected Work</h2>
+    <h2 class="section-title reveal">Selected Work</h2>
     <div class="projects-grid">
-      <div class="project-card">
-        <div class="project-image"><img src="uploads/maximilian-bungart-Vaf7VbqqxB0-unsplash.jpg" alt="Zenith — SaaS Rebrand"></div>
+      <div class="project-card reveal">
+        <div class="project-image"><img src="uploads/maximilian-bungart-Vaf7VbqqxB0-unsplash.jpg" alt="Zenith"></div>
         <div class="project-info">
           <h4>Zenith</h4>
           <p>Complete brand refresh and campaign strategy for a growing fintech platform entering new markets.</p>
         </div>
       </div>
-      <div class="project-card">
-        <div class="project-image"><img src="uploads/long-chung-VeIViU2Suek-unsplash.jpg" alt="Ember — Consumer Brand Launch"></div>
+      <div class="project-card reveal" style="transition-delay:0.12s">
+        <div class="project-image"><img src="uploads/long-chung-VeIViU2Suek-unsplash.jpg" alt="Ember"></div>
         <div class="project-info">
           <h4>Ember</h4>
           <p>Full brand identity and go-to-market campaign for a direct-to-consumer wellness startup.</p>
         </div>
       </div>
-      <div class="project-card">
-        <div class="project-image"><img src="uploads/markus-spiske-BfphcCvhl6E-unsplash.jpg" alt="Catalyst — B2B Positioning"></div>
+      <div class="project-card reveal" style="transition-delay:0.06s">
+        <div class="project-image"><img src="uploads/markus-spiske-BfphcCvhl6E-unsplash.jpg" alt="Catalyst"></div>
         <div class="project-info">
           <h4>Catalyst</h4>
           <p>Strategic positioning and thought leadership campaign for an enterprise software company.</p>
         </div>
       </div>
-      <div class="project-card">
+      <div class="project-card reveal" style="transition-delay:0.18s">
         <div class="project-image">Volt — Brand Identity</div>
         <div class="project-info">
           <h4>Volt</h4>
@@ -383,9 +451,9 @@
 
   <!-- Contact -->
   <section class="contact-section" id="contact">
-    <h2>Bring Your Vision to Life</h2>
-    <p>Let's create something remarkable together. Tell us about your project.</p>
-    <form class="contact-form" id="contactForm" novalidate>
+    <h2 class="reveal">Bring Your Vision to Life</h2>
+    <p class="reveal" style="transition-delay:0.1s">Let's create something remarkable together. Tell us about your project.</p>
+    <form class="contact-form reveal" id="contactForm" style="transition-delay:0.2s" novalidate>
       <div class="form-group">
         <label for="name">Name</label>
         <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -433,52 +501,125 @@
   </footer>
 
   <script>
+    // ── git push origin main --force canvas background ──
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    const CMD = 'git push origin main --force  ';
+    const FS = 13;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      drops = Array.from({ length: Math.floor(canvas.width / FS) }, () => Math.random() * -80);
+    });
+
+    let drops = Array.from({ length: Math.floor(canvas.width / FS) }, () => Math.random() * -80);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(8,12,15,0.055)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = `${FS}px 'Courier New', monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const ch = CMD[Math.floor(Math.random() * CMD.length)];
+        const brightness = 0.04 + Math.random() * 0.07;
+        ctx.fillStyle = `rgba(180,220,180,${brightness})`;
+        ctx.fillText(ch, i * FS, drops[i] * FS);
+        if (drops[i] * FS > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i] += 0.22;
+      }
+    }
+    setInterval(drawMatrix, 38);
+
+    // ── Custom cursor ──
+    const cursorDot  = document.getElementById('cursor');
+    const cursorRing = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursorDot.style.left = mx + 'px';
+      cursorDot.style.top  = my + 'px';
+    });
+
+    (function animateRing() {
+      rx += (mx - rx) * 0.11;
+      ry += (my - ry) * 0.11;
+      cursorRing.style.left = rx + 'px';
+      cursorRing.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    document.querySelectorAll('a, button, .project-card, .service-item, input, textarea').forEach(el => {
+      el.addEventListener('mouseenter', () => cursorRing.classList.add('expanded'));
+      el.addEventListener('mouseleave', () => cursorRing.classList.remove('expanded'));
+    });
+
+    // ── Ripple on click ──
+    document.addEventListener('click', e => {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top  = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 800);
+    });
+
+    // ── Hero word reveal ──
+    const heroTitle = document.getElementById('heroTitle');
+    heroTitle.innerHTML = heroTitle.textContent.trim().split(' ')
+      .map((w, i) => `<span class="word" style="transition-delay:${0.1 + i * 0.09}s">${w}</span>`)
+      .join(' ');
+    requestAnimationFrame(() =>
+      setTimeout(() => heroTitle.querySelectorAll('.word').forEach(w => w.classList.add('visible')), 150)
+    );
+
     // ── Menu toggle ──
     const menuToggle = document.getElementById('menuToggle');
     const navClose   = document.getElementById('navClose');
     const navMenu    = document.getElementById('navMenu');
-    const navLinks   = document.querySelectorAll('.nav-link');
 
-    function openMenu() {
-      navMenu.classList.add('active');
-      navMenu.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeMenu() {
-      navMenu.classList.remove('active');
-      navMenu.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
+    function openMenu() { navMenu.classList.add('active'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+    function closeMenu() { navMenu.classList.remove('active'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
 
     menuToggle.addEventListener('click', openMenu);
     navClose.addEventListener('click', closeMenu);
-    navLinks.forEach(link => link.addEventListener('click', closeMenu));
+    document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', closeMenu));
 
     // ── Contact form ──
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
       e.preventDefault();
       alert("Thank you for your message. We'll be in touch soon!");
       this.reset();
     });
 
-    // ── Scroll-triggered fade-in (IntersectionObserver) ──
-    const observerOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
-    const observer = new IntersectionObserver((entries) => {
+    // ── Scroll reveal ──
+    const revealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.animation = 'fadeInUp 0.75s ease both';
-          observer.unobserve(entry.target);
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
         }
       });
-    }, observerOptions);
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll(
-      '.about-content, .services-grid, .sectors-grid, .projects-grid, .section-title'
-    ).forEach(el => {
-      el.style.opacity = '0';
-      observer.observe(el);
-    });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Section title underline on scroll ──
+    const titleObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          titleObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    document.querySelectorAll('.section-title').forEach(el => titleObserver.observe(el));
   </script>
 
 </body>
