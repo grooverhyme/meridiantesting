@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian – Brand Strategy & Creative</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #1a1a1a;
+      background: #fafafa;
+      overflow-x: hidden;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Navigation ── */
+    .nav-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: white;
+      padding: 20px 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .logo {
+      font-size: 16px; font-weight: 600; letter-spacing: 2px;
+      color: #1a1a1a; text-transform: uppercase;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo img { height: 36px; width: auto; object-fit: contain; }
+    .menu-toggle {
+      background: none; border: none; cursor: pointer;
+      font-size: 20px; color: #1a1a1a; line-height: 1;
+      padding: 4px;
+    }
+
+    /* Full-screen overlay menu */
+    .nav-menu {
+      position: fixed; top: 0; left: -100%; width: 100%; height: 100vh;
+      background: white; z-index: 999;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 60px 32px;
+    }
+    .nav-menu.active { left: 0; }
+    .nav-menu a {
+      text-decoration: none; color: #1a1a1a;
+      font-size: 26px; font-weight: 300;
+      transition: opacity 0.2s;
+    }
+    .nav-menu a:hover { opacity: 0.5; }
+    .nav-close {
+      position: absolute; top: 20px; right: 32px;
+      background: none; border: none; font-size: 26px; cursor: pointer;
+      color: #1a1a1a; line-height: 1;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      margin-top: 70px;
+      min-height: calc(100vh - 70px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 32px;
+      background: #fafafa;
+    }
+    .hero-content {
+      text-align: center; max-width: 800px;
+      animation: fadeInUp 0.9s ease both;
+    }
+    .hero h1 {
+      font-size: 64px; font-weight: 300; line-height: 1.15;
+      margin-bottom: 24px; color: #1a1a1a;
+    }
+    .hero-subtitle {
+      font-size: 18px; color: #666; line-height: 1.7;
+      margin-bottom: 48px; font-weight: 300;
+    }
+    .cta-button {
+      display: inline-block; padding: 14px 36px;
+      background: #1a1a1a; color: white;
+      text-decoration: none; font-weight: 500;
+      border-radius: 2px; border: none;
+      transition: opacity 0.2s ease; cursor: pointer;
+      font-size: 14px; letter-spacing: 0.5px;
+      font-family: inherit;
+    }
+    .cta-button:hover { opacity: 0.7; }
+
+    /* ── Generic section ── */
+    .section {
+      padding: 100px 32px;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .section-title {
+      font-size: 42px; font-weight: 300; margin-bottom: 60px;
+      color: #1a1a1a;
+    }
+
+    /* ── About ── */
+    .about-content {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    .about-text p {
+      font-size: 16px; line-height: 1.85; margin-bottom: 24px;
+      color: #555; font-weight: 300;
+    }
+    .about-text p:last-child { margin-bottom: 0; }
+    .about-highlight { color: #1a1a1a; font-weight: 500; }
+    .about-image {
+      width: 100%; height: 450px;
+      background: #f0f0f0; border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #aaa; letter-spacing: 0.5px;
+      overflow: hidden;
+    }
+    .about-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* ── Services ── */
+    .services-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 60px;
+    }
+    .service-item h3 {
+      font-size: 18px; font-weight: 500; margin-bottom: 12px; color: #1a1a1a;
+    }
+    .service-item p {
+      font-size: 14px; line-height: 1.7; color: #777; font-weight: 300;
+    }
+
+    /* ── Sectors ── */
+    .sectors-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    }
+    .sector-item h4 { font-size: 16px; font-weight: 500; margin-bottom: 12px; }
+    .sector-item p { font-size: 13px; color: #777; line-height: 1.7; font-weight: 300; }
+
+    /* ── Projects ── */
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px;
+    }
+    .project-card { border-radius: 2px; overflow: hidden; background: white; }
+    .project-image {
+      width: 100%; height: 320px;
+      background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #bbb; letter-spacing: 0.5px;
+    }
+    .project-info { padding: 28px 0; }
+    .project-info h4 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+    .project-info p { font-size: 13px; color: #888; font-weight: 300; line-height: 1.6; }
+
+    /* ── Contact ── */
+    .contact-section {
+      background: #1a1a1a; color: white;
+      padding: 100px 32px; text-align: center;
+    }
+    .contact-section h2 {
+      font-size: 48px; font-weight: 300; margin-bottom: 20px;
+    }
+    .contact-section > p {
+      font-size: 16px; margin-bottom: 52px; font-weight: 300; color: rgba(255,255,255,0.7);
+    }
+    .contact-form { max-width: 500px; margin: 0 auto; }
+    .form-group { margin-bottom: 28px; text-align: left; }
+    .form-group label {
+      display: block; font-size: 11px; margin-bottom: 10px;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.6);
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; padding: 12px 0;
+      border: none; border-bottom: 1px solid rgba(255,255,255,0.2);
+      font-family: inherit; font-size: 15px;
+      background: transparent; color: white;
+      transition: border-color 0.2s; outline: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .form-group input:focus,
+    .form-group textarea:focus { border-bottom-color: rgba(255,255,255,0.7); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .contact-section .cta-button {
+      background: white; color: #1a1a1a; width: 100%; margin-top: 16px;
+    }
+    .contact-section .cta-button:hover { opacity: 0.85; }
+
+    /* ── Footer ── */
+    footer {
+      background: #f5f5f5;
+      padding: 60px 32px;
+      border-top: 1px solid #eee;
+    }
+    .footer-content { max-width: 1100px; margin: 0 auto; }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 60px;
+      margin-bottom: 60px;
+    }
+    .footer-logo { height: 44px; width: auto; margin-bottom: 16px; object-fit: contain; }
+    .footer-column h5 {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1.5px; margin-bottom: 16px; color: #1a1a1a;
+    }
+    .footer-column p {
+      font-size: 13px; color: #777; line-height: 1.9; font-weight: 300;
+    }
+    .footer-column a { color: #1a1a1a; text-decoration: none; }
+    .footer-column a:hover { opacity: 0.6; }
+    .footer-bottom {
+      font-size: 12px; color: #aaa; text-align: center;
+      padding-top: 40px; border-top: 1px solid #eee;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-header { padding: 16px 20px; }
+      .nav-menu { gap: 32px; }
+      .nav-menu a { font-size: 22px; }
+
+      .hero { margin-top: 60px; min-height: calc(100vh - 60px); padding: 40px 20px; }
+      .hero h1 { font-size: 38px; }
+      .hero-subtitle { font-size: 16px; }
+
+      .section { padding: 72px 20px; }
+      .section-title { font-size: 30px; margin-bottom: 40px; }
+
+      .about-content { grid-template-columns: 1fr; gap: 36px; }
+      .about-image { height: 280px; }
+
+      .services-grid { grid-template-columns: 1fr; gap: 36px; }
+      .sectors-grid { grid-template-columns: 1fr; gap: 28px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .project-image { height: 260px; }
+
+      .contact-section { padding: 72px 20px; }
+      .contact-section h2 { font-size: 34px; }
+
+      .footer-grid { grid-template-columns: 1fr; gap: 36px; }
+      footer { padding: 48px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="nav-header">
+    <div class="logo">
+      <img src="uploads/marque logo.png" alt="Meridian">
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">&#9776;</button>
+  </header>
+
+  <nav class="nav-menu" id="navMenu" aria-hidden="true">
+    <button class="nav-close" id="navClose" aria-label="Close menu">&#10005;</button>
+    <a href="#about"    class="nav-link">About</a>
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#sectors"  class="nav-link">Sectors</a>
+    <a href="#projects" class="nav-link">Projects</a>
+    <a href="#contact"  class="nav-link">Contact</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <img src="uploads/marque logo.png" alt="Meridian" style="height:72px;width:auto;object-fit:contain;margin-bottom:36px;display:block;margin-left:auto;margin-right:auto;">
+      <h1>Brand Stories That<br>Move People</h1>
+      <p class="hero-subtitle">Strategy, design, and storytelling that cuts through the noise<br>and builds lasting connections with your audience.</p>
+      <a href="#contact" class="cta-button">Let's Talk</a>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section" id="about">
+    <h2 class="section-title">About</h2>
+    <div class="about-content">
+      <div class="about-text">
+        <p>For three decades, we've been crafting brands that stand out. <span class="about-highlight">Meridian</span> brings together strategists, designers, and storytellers obsessed with one thing: creating narratives that resonate.</p>
+        <p>We don't do generic. Every campaign, identity, and strategy we develop is built on deep research, bold thinking, and relentless attention to craft. We work with ambitious brands across every sector—from startups to established leaders—helping them discover their voice and own their space in the market.</p>
+        <p>We're strategists who think visually, designers who think strategically, and storytellers who understand business. Your brand has a story worth telling. We'll help you tell it right.</p>
+      </div>
+      <div class="about-image">
+        Three Decades of Bold Brand Stories
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <h2 class="section-title">Services</h2>
+    <div class="services-grid">
+      <div class="service-item">
+        <h3>Brand Strategy</h3>
+        <p>Positioning workshops, market analysis, and narrative development that uncover your competitive edge and define your unique voice.</p>
+      </div>
+      <div class="service-item">
+        <h3>Visual Identity</h3>
+        <p>Logo design, color systems, typography, and complete design language systems that make your brand unmistakable.</p>
+      </div>
+      <div class="service-item">
+        <h3>Campaign Development</h3>
+        <p>Integrated creative campaigns across digital, social, print, and experiential—built on insight and designed to drive results.</p>
+      </div>
+      <div class="service-item">
+        <h3>Content & Copywriting</h3>
+        <p>Strategic messaging, brand voice development, and content creation that tells your story with clarity and impact.</p>
+      </div>
+      <div class="service-item">
+        <h3>Digital Design</h3>
+        <p>Web design, app design, and digital experiences that convert visitors into customers while embodying your brand identity.</p>
+      </div>
+      <div class="service-item">
+        <h3>Brand Guidelines</h3>
+        <p>Comprehensive brand guidelines, collateral systems, and launch strategy to ensure consistent implementation across all touchpoints.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sectors -->
+  <section class="section" id="sectors">
+    <h2 class="section-title">Sectors</h2>
+    <div class="sectors-grid">
+      <div class="sector-item">
+        <h4>Technology</h4>
+        <p>SaaS, fintech, and software brands. We translate complexity into compelling narratives that resonate with technical and non-technical audiences.</p>
+      </div>
+      <div class="sector-item">
+        <h4>Lifestyle & Retail</h4>
+        <p>Consumer brands, fashion, food, and wellness. We create emotional connections that drive loyalty and repeat engagement.</p>
+      </div>
+      <div class="sector-item">
+        <h4>B2B & Enterprise</h4>
+        <p>Corporate and business services. We build brands that establish authority, build trust, and win at scale.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" id="projects">
+    <h2 class="section-title">Selected Work</h2>
+    <div class="projects-grid">
+      <div class="project-card">
+        <div class="project-image">Zenith — SaaS Rebrand</div>
+        <div class="project-info">
+          <h4>Zenith</h4>
+          <p>Complete brand refresh and campaign strategy for a growing fintech platform entering new markets.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">Ember — Consumer Brand Launch</div>
+        <div class="project-info">
+          <h4>Ember</h4>
+          <p>Full brand identity and go-to-market campaign for a direct-to-consumer wellness startup.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">Catalyst — B2B Positioning</div>
+        <div class="project-info">
+          <h4>Catalyst</h4>
+          <p>Strategic positioning and thought leadership campaign for an enterprise software company.</p>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="project-image">Volt — Brand Identity</div>
+        <div class="project-info">
+          <h4>Volt</h4>
+          <p>Complete visual identity and marketing launch for an energy-tech startup disrupting the sector.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact-section" id="contact">
+    <h2>Bring Your Vision to Life</h2>
+    <p>Let's create something remarkable together. Tell us about your project.</p>
+    <form class="contact-form" id="contactForm" novalidate>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Your name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+      </div>
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input type="text" id="company" name="company" placeholder="Your company">
+      </div>
+      <div class="form-group">
+        <label for="message">Project Brief</label>
+        <textarea id="message" name="message" placeholder="Tell us about your project" required></textarea>
+      </div>
+      <button type="submit" class="cta-button">Send</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-grid">
+        <div class="footer-column">
+          <img src="uploads/marque logo.png" alt="Meridian" class="footer-logo">
+          <p>Meridian is a branding and creative studio crafting bold narratives for ambitious brands.</p>
+        </div>
+        <div class="footer-column">
+          <h5>Contact</h5>
+          <p>hello@meridian.studio<br>+1 (555) 123-4567</p>
+        </div>
+        <div class="footer-column">
+          <h5>Follow</h5>
+          <p>
+            <a href="#">Instagram</a><br>
+            <a href="#">LinkedIn</a>
+          </p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Meridian Studio. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Menu toggle ──
+    const menuToggle = document.getElementById('menuToggle');
+    const navClose   = document.getElementById('navClose');
+    const navMenu    = document.getElementById('navMenu');
+    const navLinks   = document.querySelectorAll('.nav-link');
+
+    function openMenu() {
+      navMenu.classList.add('active');
+      navMenu.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      navMenu.classList.remove('active');
+      navMenu.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    menuToggle.addEventListener('click', openMenu);
+    navClose.addEventListener('click', closeMenu);
+    navLinks.forEach(link => link.addEventListener('click', closeMenu));
+
+    // ── Contact form ──
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      alert("Thank you for your message. We'll be in touch soon!");
+      this.reset();
+    });
+
+    // ── Scroll-triggered fade-in (IntersectionObserver) ──
+    const observerOptions = { threshold: 0.12, rootMargin: '0px 0px -40px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'fadeInUp 0.75s ease both';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll(
+      '.about-content, .services-grid, .sectors-grid, .projects-grid, .section-title'
+    ).forEach(el => {
+      el.style.opacity = '0';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
